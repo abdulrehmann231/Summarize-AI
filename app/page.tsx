@@ -5,10 +5,15 @@ import UploadArea from "../components/UploadArea";
 import ChatInterface from "../components/ChatInterface";
 import { Sparkles } from "lucide-react";
 
-export default function Home() {
-  const [session, setSession] = useState(null); // { id: string, source: string }
+interface Session {
+  id: string;
+  source: string;
+}
 
-  const handleUploadComplete = (sessionId, source) => {
+export default function Home() {
+  const [session, setSession] = useState<Session | null>(null);
+
+  const handleUploadComplete = (sessionId: string, source: string) => {
     setSession({ id: sessionId, source });
   };
 
@@ -17,14 +22,14 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] text-white selection:bg-purple-500/30 overflow-hidden relative">
+    <main className="min-h-screen bg-[#0a0a0a] text-white selection:bg-purple-500/30 relative">
       {/* Background Gradients */}
       <div className="fixed inset-0 z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-900/20 rounded-full blur-[120px] pointer-events-none"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8 h-screen flex flex-col">
+      <div className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col">
         {/* Header */}
         <header className="flex items-center justify-between mb-12">
             <div className="flex items-center space-x-3">

@@ -1,18 +1,22 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Upload, Link, FileText, X, CheckCircle, Loader2 } from 'lucide-react';
+import { Upload, Link, FileText, X, Loader2 } from 'lucide-react';
 
-export default function UploadArea({ onUploadComplete }) {
-  const [activeTab, setActiveTab] = useState('pdf'); // 'pdf' or 'url'
+interface UploadAreaProps {
+  onUploadComplete: (sessionId: string, source: string) => void;
+}
+
+export default function UploadArea({ onUploadComplete }: UploadAreaProps) {
+  const [activeTab, setActiveTab] = useState<'pdf' | 'url'>('pdf');
   const [dragActive, setDragActive] = useState(false);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDrag = (e) => {
+  const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -22,7 +26,7 @@ export default function UploadArea({ onUploadComplete }) {
     }
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -31,14 +35,14 @@ export default function UploadArea({ onUploadComplete }) {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       validateAndSetFile(e.target.files[0]);
     }
   };
 
-  const validateAndSetFile = (uploadedFile) => {
+  const validateAndSetFile = (uploadedFile: File) => {
     if (uploadedFile.type === 'application/pdf') {
       setFile(uploadedFile);
       setError('');
@@ -64,7 +68,7 @@ export default function UploadArea({ onUploadComplete }) {
       
       onUploadComplete(data.session_id, data.source);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsUploading(false);
     }
@@ -89,7 +93,7 @@ export default function UploadArea({ onUploadComplete }) {
       
       onUploadComplete(data.session_id, data.filename);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsUploading(false);
     }

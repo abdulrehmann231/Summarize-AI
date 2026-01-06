@@ -3,13 +3,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, Bot, Loader2, Sparkles } from 'lucide-react';
 
-export default function ChatInterface({ sessionId, sourceName, onReset }) {
-  const [messages, setMessages] = useState([
+interface Message {
+  role: 'user' | 'ai';
+  content: string;
+}
+
+interface ChatInterfaceProps {
+  sessionId: string;
+  sourceName: string;
+  onReset: () => void;
+}
+
+export default function ChatInterface({ sessionId, sourceName, onReset }: ChatInterfaceProps) {
+  const [messages, setMessages] = useState<Message[]>([
     { role: 'ai', content: `Hello! I've analyzed **${sourceName}**. Ask me anything about it.` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -19,7 +30,7 @@ export default function ChatInterface({ sessionId, sourceName, onReset }) {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async (e) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
@@ -40,7 +51,7 @@ export default function ChatInterface({ sessionId, sourceName, onReset }) {
       
       setMessages(prev => [...prev, { role: 'ai', content: data.answer }]);
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'ai', content: `Error: ${err.message}` }]);
+      setMessages(prev => [...prev, { role: 'ai', content: `Error: ${err instanceof Error ? err.message : 'Unknown error'}` }]);
     } finally {
       setIsLoading(false);
     }
