@@ -40,7 +40,7 @@ export default function ChatInterface({ sessionId, sourceName, onReset }: ChatIn
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/ask', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question, session_id: sessionId }),

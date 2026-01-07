@@ -57,7 +57,7 @@ export default function UploadArea({ onUploadComplete }: UploadAreaProps) {
     setError('');
     
     try {
-      const res = await fetch('http://localhost:8000/upload-url', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/upload-url`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
@@ -83,7 +83,7 @@ export default function UploadArea({ onUploadComplete }: UploadAreaProps) {
     formData.append('file', file);
     
     try {
-      const res = await fetch('http://localhost:8000/upload', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
